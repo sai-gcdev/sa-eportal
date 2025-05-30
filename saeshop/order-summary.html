@@ -101,5 +101,12 @@
       });
     });
   </script>
+  <!-- Add before </body> in index.html and all protected pages -->
+<script>
+  // Redirect to login if not logged in
+  if (localStorage.getItem('portal_logged_in') !== 'true') {
+    window.location.href = 'login.html';
+  }
+</script>
 </body>
 </html>

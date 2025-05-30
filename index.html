@@ -103,6 +103,7 @@
 <body>
   <div class="container">
     <h1>Welcome to Sa-ePortal</h1>
+    <button id="logout-btn" style="float:right; margin-bottom:20px; background:#e53935; color:#fff; border:none; border-radius:8px; padding:8px 18px; font-size:1rem; font-weight:bold; cursor:pointer; display:none;">Logout</button>
     <p>Choose a tool to get started:</p>
     <div class="tool-grid">
       <a href="saeshop/shop.html" class="tool-card">
@@ -133,5 +134,21 @@
       <!-- Add more tool-cards here as your portal grows -->
     </div>
   </div>
+<!-- ...existing code... -->
+<script>
+  // Redirect to login if not logged in
+  if (localStorage.getItem('portal_logged_in') !== 'true') {
+    window.location.href = 'login.html';
+  } else {
+    // Show logout button
+    document.getElementById('logout-btn').style.display = 'inline-block';
+    document.getElementById('logout-btn').onclick = function() {
+      localStorage.removeItem('portal_logged_in');
+      window.location.href = 'login.html';
+    };
+  }
+</script>
+<!-- ...existing code... -->
+</script>
 </body>
 </html>

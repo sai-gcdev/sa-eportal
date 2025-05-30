@@ -18,5 +18,12 @@
   <div class="wishlist-list" id="wishlist-list"></div>
   <div class="empty-msg" id="empty-msg" style="display:none;">No products in wishlist.</div>
   <script src="js/wishlist.js"></script>
+  <!-- Add before </body> in index.html and all protected pages -->
+<script>
+  // Redirect to login if not logged in
+  if (localStorage.getItem('portal_logged_in') !== 'true') {
+    window.location.href = 'login.html';
+  }
+</script>
 </body>
 </html>

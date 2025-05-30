@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: linear-gradient(120deg, #fbe9e7 0%, #fff 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
+      background: #fff;
+      padding: 40px 32px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(229,57,53,0.13);
+      text-align: center;
+      max-width: 350px;
+      width: 100%;
+    }
+    .login-title {
+      font-size: 2rem;
+      color: #e53935;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+    .login-input {
+      width: 100%;
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 8px;
+      border: 1.5px solid #fbe9e7;
+      font-size: 1rem;
+    }
+    .login-btn {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      padding: 12px 0;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover {
+      background: #b71c1c;
+    }
+    .login-error {
+      color: #b71c1c;
+      margin-top: 10px;
+      font-size: 1rem;
+      min-height: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-title">Portal Login</div>
+    <input type="password" id="portal-code" class="login-input" placeholder="Enter Portal Code" autofocus>
+    <button class="login-btn" onclick="login()">Login</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+  <script>
+    // If already logged in, redirect to index
+    if (localStorage.getItem('portal_logged_in') === 'true') {
+      window.location.href = 'index.html';
+    }
+    function login() {
+      const code = document.getElementById('portal-code').value;
+      const errorDiv = document.getElementById('login-error');
+      // TODO: Replace this with AWS Gateway call in future
+      if (code === 'Admin@123') {
+        localStorage.setItem('portal_logged_in', 'true');
+        window.location.href = 'index.html';
+      } else {
+        errorDiv.textContent = 'Invalid portal code. Please try again.';
+      }
+    }
+    // Enter key support
+    document.getElementById('portal-code').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') login();
+    });
+  </script>
+</body>
+</html>

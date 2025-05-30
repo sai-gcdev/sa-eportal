@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Summary - Sa-eShop</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .summary-item {
+      margin-bottom: 10px;
+      font-size: 1.08rem;
+    }
+    .proceed-btn {
+      display: inline-block;
+      margin-top: 32px;
+      padding: 12px 36px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(90deg, #e53935 60%, #b71c1c 100%);
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 12px rgba(229,57,53,0.08);
+      text-decoration: none;
+    }
+    .proceed-btn:hover {
+      background: linear-gradient(90deg, #b71c1c 60%, #e53935 100%);
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <a href="shop.html" class="shop-title">Sa-eShop</a>
+    <nav class="nav-links">
+      <a href="shop.html">Shop</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+  <div class="container" style="max-width: 500px;">
+    <h1>Order Summary</h1>
+    <div id="order-details">
+      <!-- Order details will be dynamically added here -->
+    </div>
+    <a href="shop.html" class="proceed-btn">Continue Shopping</a>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const orderDetails = document.getElementById('order-details');
+      // Try to get total from URL, else from localStorage
+      let totalCost = new URLSearchParams(window.location.search).get('total');
+      if (!totalCost || isNaN(parseFloat(totalCost))) {
+        totalCost = localStorage.getItem('cartTotal') || "0.00";
+      }
+
+      // Generate Order ID
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const orderId = `ORDRXXXXXX${hours}${minutes}${seconds}`;
+
+      // Calculate Delivery Date (4 days from now)
+      const deliveryDate = new Date(now);
+      deliveryDate.setDate(now.getDate() + 4);
+      const deliveryDateString = deliveryDate.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      orderDetails.innerHTML = `
+        <div class="summary-item"><strong>Order ID:</strong> ${orderId}</div>
+        <div class="summary-item"><strong>Delivery Date:</strong> ${deliveryDateString}</div>
+        <div class="summary-item"><strong>Total Cost:</strong> ₹${parseFloat(totalCost).toFixed(2)}</div>
+        <p style="margin-top:24px;font-size:1.15rem;">Thank you for your order!<br>Your items will be delivered soon.</p>
+      `;
+
+      // Clear checkout, delivery, payment, and cart data from localStorage
+      [
+        'billingName',
+        'billingEmail',
+        'billingPhone',
+        'billingAddress',
+        'billingCity',
+        'billingZip',
+        'billingCountry',
+        'sameAsBilling',
+        'deliveryName',
+        'deliveryAddress',
+        'deliveryCity',
+        'deliveryZip',
+        'deliveryCountry',
+        'selectedPaymentMethod',
+        'cart',
+        'cartTotal'
+      ].forEach(function(key) {
+        localStorage.removeItem(key);
+      });
+    });
+  </script>
+</body>
+</html>

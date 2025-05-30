@@ -4,31 +4,31 @@ const products = [
     name: "T-shirt",
     category: "Clothing",
     price: 499,
-    image: "/images/Tshirt.jpg"
+    image: "images/Tshirt.jpg"
   },
   {
     name: "Jeans",
     category: "Clothing",
     price: 999,
-    image: "/images/Jeans.jpg"
+    image: "images/Jeans.jpg"
   },
   {
     name: "Hoodie",
     category: "Clothing",
     price: 1299,
-    image: "/images/Hoodie.jpg"
+    image: "images/Hoodie.jpg"
   },
   {
     name: "Socks",
     category: "Clothing",
     price: 199,
-    image: "/images/Socks.jpg"
+    image: "images/Socks.jpg"
   },
   {
     name: "Jacket",
     category: "Clothing",
     price: 1999,
-    image: "/images/Jacket.jpg"
+    image: "images/Jacket.jpg"
   },
 
   // Footwear
@@ -36,31 +36,31 @@ const products = [
     name: "Sneakers",
     category: "Footwear",
     price: 1499,
-    image: "/images/Sneakers.jpg"
+    image: "images/Sneakers.jpg"
   },
   {
     name: "Flip flops",
     category: "Footwear",
     price: 299,
-    image: "/images/Flipflops.webp"
+    image: "images/Flipflops.webp"
   },
   {
     name: "Boots",
     category: "Footwear",
     price: 1899,
-    image: "/images/Boots.jpg"
+    image: "images/Boots.jpg"
   },
   {
     name: "Sandals",
     category: "Footwear",
     price: 499,
-    image: "/images/Sandals.jpg"
+    image: "images/Sandals.jpg"
   },
   {
     name: "Slippers",
     category: "Footwear",
     price: 399,
-    image: "/images/Slippers.jpg"
+    image: "images/Slippers.jpg"
   },
 
   // Electronics
@@ -68,31 +68,31 @@ const products = [
     name: "Phone charger",
     category: "Electronics",
     price: 699,
-    image: "/images/Phonecharger.jpg"
+    image: "images/Phonecharger.jpg"
   },
   {
     name: "Earphones",
     category: "Electronics",
     price: 799,
-    image: "/images/Earphones.webp"
+    image: "images/Earphones.webp"
   },
   {
     name: "Power bank",
     category: "Electronics",
     price: 1099,
-    image: "/images/Powerbank.webp"
+    image: "images/Powerbank.webp"
   },
   {
     name: "USB flash drive",
     category: "Electronics",
     price: 599,
-    image: "/images/USBFlashDrive.webp"
+    image: "images/USBFlashDrive.webp"
   },
   {
     name: "Bluetooth speaker",
     category: "Electronics",
     price: 1299,
-    image: "/images/BluetoothSpeaker.jpg"
+    image: "images/BluetoothSpeaker.jpg"
   },
 
   // Kitchen
@@ -100,31 +100,31 @@ const products = [
     name: "Frying pan",
     category: "Kitchen",
     price: 899,
-    image: "/images/FryingPan.webp"
+    image: "images/FryingPan.webp"
   },
   {
     name: "Water bottle",
     category: "Kitchen",
     price: 399,
-    image: "/images/WaterBottle.webp"
+    image: "images/WaterBottle.webp"
   },
   {
     name: "Coffee mug",
     category: "Kitchen",
     price: 299,
-    image: "/images/CoffeeMug.webp"
+    image: "images/CoffeeMug.webp"
   },
   {
     name: "Lunch box",
     category: "Kitchen",
     price: 599,
-    image: "/images/LunchBox.webp"
+    image: "images/LunchBox.webp"
   },
   {
     name: "Cutting board",
     category: "Kitchen",
     price: 349,
-    image: "/images/CuttingBoard.webp"
+    image: "images/CuttingBoard.webp"
   },
 
   // Personal Care
@@ -132,30 +132,30 @@ const products = [
     name: "Toothbrush",
     category: "Personal Care",
     price: 99,
-    image: "/images/ToothBrush.webp"
+    image: "images/ToothBrush.webp"
   },
   {
     name: "Shampoo",
     category: "Personal Care",
     price: 249,
-    image: "/images/Shampoo.webp"
+    image: "images/Shampoo.webp"
   },
   {
     name: "Hairbrush",
     category: "Personal Care",
     price: 199,
-    image: "/images/Hairbrush.webp"
+    image: "images/Hairbrush.webp"
   },
   {
     name: "Face wash",
     category: "Personal Care",
     price: 299,
-    image: "/images/FaceWash.webp"
+    image: "images/FaceWash.webp"
   },
   {
     name: "Hand sanitizer",
     category: "Personal Care",
     price: 149,
-    image: "/images/HandSanitizer.webp"
+    image: "images/HandSanitizer.webp"
   }
 ];

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout - Sa-eShop</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .checkout-form {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 36px 32px 28px 32px;
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      border: 1px solid #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 18px;
+    }
+    .form-row label {
+      min-width: 150px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0;
+      margin-right: 10px;
+      text-align: right;
+    }
+    .form-row input[type="text"],
+    .form-row input[type="email"],
+    .form-row input[type="tel"] {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #e0e0e0;
+      font-size: 1.08rem;
+      background: #f7f7fa;
+      transition: border 0.2s;
+    }
+    .form-row input[type="text"]:focus,
+    .form-row input[type="email"]:focus,
+    .form-row input[type="tel"]:focus {
+      border: 1.5px solid #e53935;
+      outline: none;
+      background: #fff;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      margin: 16px 0 10px 0;
+    }
+    .checkbox-row input[type="checkbox"] {
+      margin-right: 8px;
+      accent-color: #e53935;
+    }
+    .section-title {
+      font-size: 1.18rem;
+      color: #e53935;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 18px;
+      letter-spacing: 0.5px;
+    }
+    .payment-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 10px;
+      margin-top: 8px;
+    }
+    .payment-option {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      width: 120px;
+      text-align: center;
+      background: #fff;
+      transition: box-shadow 0.2s, border 0.2s;
+      user-select: none;
+    }
+    .payment-option img {
+      max-width: 48px;
+      height: 32px;
+      display: block;
+      margin: 0 auto 5px auto;
+    }
+    .payment-option.active {
+      border: 2px solid #e53935;
+      box-shadow: 0 2px 12px rgba(229,57,53,0.13);
+      background: #fff5f5;
+    }
+    @media (max-width: 700px) {
+      .checkout-form {
+        padding: 18px 4vw;
+        max-width: 98vw;
+      }
+      .form-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+      }
+      .form-row label {
+        text-align: left;
+        margin-bottom: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <a href="shop.html" class="shop-title">Sa-eShop</a>
+    <nav class="nav-links">
+      <a href="shop.html">Shop</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h1>Checkout</h1>
+    <form id="billing-form" class="checkout-form">
+      <div class="section-title">Billing Information</div>
+      <div class="form-row">
+        <label for="billing-name">Full Name</label>
+        <input type="text" id="billing-name" placeholder="Enter your name" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-email">Email</label>
+        <input type="email" id="billing-email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-phone">Phone Number</label>
+        <input type="tel" id="billing-phone" placeholder="Enter your phone number" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-address">Address</label>
+        <input type="text" id="billing-address" placeholder="Enter your address" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-city">City</label>
+        <input type="text" id="billing-city" placeholder="Enter your city" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-zip">ZIP/Postal Code</label>
+        <input type="text" id="billing-zip" placeholder="Enter your ZIP/Postal code" required />
+      </div>
+      <div class="form-row">
+        <label for="billing-country">Country</label>
+        <input type="text" id="billing-country" placeholder="Enter your country" required />
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="same-as-billing" checked />
+        <label for="same-as-billing" style="font-weight:normal; margin:0;">Delivery address same as billing</label>
+      </div>
+      <div id="delivery-form-container" style="display:none;">
+        <div class="section-title">Delivery Information</div>
+        <div class="form-row">
+          <label for="delivery-name">Full Name</label>
+          <input type="text" id="delivery-name" placeholder="Enter recipient's name" />
+        </div>
+        <div class="form-row">
+          <label for="delivery-address">Address</label>
+          <input type="text" id="delivery-address" placeholder="Enter delivery address" />
+        </div>
+        <div class="form-row">
+          <label for="delivery-city">City</label>
+          <input type="text" id="delivery-city" placeholder="Enter delivery city" />
+        </div>
+        <div class="form-row">
+          <label for="delivery-zip">ZIP/Postal Code</label>
+          <input type="text" id="delivery-zip" placeholder="Enter delivery ZIP/Postal code" />
+        </div>
+        <div class="form-row">
+          <label for="delivery-country">Country</label>
+          <input type="text" id="delivery-country" placeholder="Enter delivery country" />
+        </div>
+      </div>
+      <div class="section-title">Select Payment Method</div>
+      <div class="payment-options">
+        <div class="payment-option" data-payment-method="card" tabindex="0">
+          <img src="images/visa.png" alt="Visa" /><br>Credit/Debit Card
+        </div>
+        <div class="payment-option" data-payment-method="upi" tabindex="0">
+          <img src="images/gpay.png" alt="GPay" /><br>UPI
+        </div>
+      </div>
+      <input type="hidden" id="selected-payment-method" name="selected-payment-method" value="card" />
+      <button type="submit" class="proceed-btn">Continue to Payment</button>
+      <a href="cart.html" class="back-btn">Back</a>
+      <button type="button" class="cancel-btn" onclick="window.location.href='cart.html'">Cancel</button>
+    </form>
+  </div>
+  <script>
+    // Payment method selection logic and delivery address toggle
+    document.addEventListener('DOMContentLoaded', function () {
+      const paymentOptions = document.querySelectorAll('.payment-option');
+      const hiddenInput = document.getElementById('selected-payment-method');
+      paymentOptions.forEach(option => {
+        option.addEventListener('click', function () {
+          paymentOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          hiddenInput.value = this.getAttribute('data-payment-method');
+        });
+      });
+      // Default selection
+      paymentOptions[0].classList.add('active');
+      hiddenInput.value = paymentOptions[0].getAttribute('data-payment-method');
+
+      // Delivery address toggle
+      const sameAsBilling = document.getElementById('same-as-billing');
+      const deliveryForm = document.getElementById('delivery-form-container');
+      function toggleDeliveryForm() {
+        if (sameAsBilling.checked) {
+          deliveryForm.style.display = 'none';
+        } else {
+          deliveryForm.style.display = '';
+        }
+      }
+      sameAsBilling.addEventListener('change', toggleDeliveryForm);
+      toggleDeliveryForm();
+
+      // Restore form data from localStorage if available
+      function restoreField(id, key) {
+        const el = document.getElementById(id);
+        if (el && localStorage.getItem(key)) el.value = localStorage.getItem(key);
+      }
+      restoreField('billing-name', 'billingName');
+      restoreField('billing-email', 'billingEmail');
+      restoreField('billing-phone', 'billingPhone');
+      restoreField('billing-address', 'billingAddress');
+      restoreField('billing-city', 'billingCity');
+      restoreField('billing-zip', 'billingZip');
+      restoreField('billing-country', 'billingCountry');
+      if (localStorage.getItem('sameAsBilling') === '0') {
+        sameAsBilling.checked = false;
+        toggleDeliveryForm();
+        restoreField('delivery-name', 'deliveryName');
+        restoreField('delivery-address', 'deliveryAddress');
+        restoreField('delivery-city', 'deliveryCity');
+        restoreField('delivery-zip', 'deliveryZip');
+        restoreField('delivery-country', 'deliveryCountry');
+      }
+
+      // On submit, store all form data in localStorage, then go to payment page
+      document.getElementById('billing-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        localStorage.setItem('selectedPaymentMethod', hiddenInput.value);
+        localStorage.setItem('billingName', document.getElementById('billing-name').value);
+        localStorage.setItem('billingEmail', document.getElementById('billing-email').value);
+        localStorage.setItem('billingPhone', document.getElementById('billing-phone').value);
+        localStorage.setItem('billingAddress', document.getElementById('billing-address').value);
+        localStorage.setItem('billingCity', document.getElementById('billing-city').value);
+        localStorage.setItem('billingZip', document.getElementById('billing-zip').value);
+        localStorage.setItem('billingCountry', document.getElementById('billing-country').value);
+        localStorage.setItem('sameAsBilling', sameAsBilling.checked ? '1' : '0');
+        if (!sameAsBilling.checked) {
+          localStorage.setItem('deliveryName', document.getElementById('delivery-name').value);
+          localStorage.setItem('deliveryAddress', document.getElementById('delivery-address').value);
+          localStorage.setItem('deliveryCity', document.getElementById('delivery-city').value);
+          localStorage.setItem('deliveryZip', document.getElementById('delivery-zip').value);
+          localStorage.setItem('deliveryCountry', document.getElementById('delivery-country').value);
+        } else {
+          localStorage.removeItem('deliveryName');
+          localStorage.removeItem('deliveryAddress');
+          localStorage.removeItem('deliveryCity');
+          localStorage.removeItem('deliveryZip');
+          localStorage.removeItem('deliveryCountry');
+        }
+        window.location.href = 'payment.html';
+      });
+    });
+  </script>
+  <!-- Add before </body> in index.html and all protected pages -->
+<script>
+  // Redirect to login if not logged in
+  if (localStorage.getItem('portal_logged_in') !== 'true') {
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

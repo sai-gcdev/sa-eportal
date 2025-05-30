@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - Sa-eShop</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="main-header">
+    <a href="shop.html" class="shop-title">Sa-eShop</a>
+    <nav class="nav-links">
+      <a href="shop.html">Shop</a>
+      <a href="wishlist.html">Wishlist</a>
+      <a href="cart.html" class="active">Cart</a>
+    </nav>
+  </header>
+  <div class="container">
+    <h1>My Cart</h1>
+    <div class="cart-list" id="cart-list"></div>
+    <div class="empty-msg" id="empty-msg" style="display:none;">No products in cart.</div>
+    <div class="cart-summary" id="cart-summary"></div>
+    <button id="checkout-btn" style="display:none; margin-top:32px;">Checkout</button>
+  </div>
+  <script src="js/cart.js"></script>
+  <script>
+    // Redirect to checkout.html on checkout
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkoutBtn = document.getElementById('checkout-btn');
+      if (checkoutBtn) {
+        checkoutBtn.onclick = function () {
+          window.location.href = 'checkout.html';
+        };
+      }
+    });
+  </script>
+  <!-- Add before </body> in index.html and all protected pages -->
+<script>
+  // Redirect to login if not logged in
+  if (localStorage.getItem('portal_logged_in') !== 'true') {
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>

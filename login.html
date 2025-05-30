@@ -75,7 +75,7 @@
     function login() {
       const code = document.getElementById('portal-code').value;
       const errorDiv = document.getElementById('login-error');
-      // TODO: Replace this with AWS Gateway call in future
+      //Replace this with AWS Gateway call
       if (code === 'Admin@123') {
         localStorage.setItem('portal_logged_in', 'true');
         window.location.href = 'index.html';

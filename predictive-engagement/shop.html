@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop - Sa-eShop</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <!-- Genesys Cloud Web Messaging Deployment Code -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+        (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script'); ys.async = 1; ys.src = n; ys.charset = 'utf-8'; document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod-usw2',
+      deploymentId: 'd32d6461-b1ad-4858-b666-d19e7c6189cb'
+    });
+  </script>
 </head>
 <body>
   <header class="main-header">
@@ -55,11 +70,57 @@
   <script src="js/products.js"></script>
   <script src="js/script.js"></script>
   <!-- Add before </body> in index.html and all protected pages -->
-<script>
-  // Redirect to login if not logged in
-  if (localStorage.getItem('portal_logged_in') !== 'true') {
-    window.location.href = 'login.html';
-  }
-</script>
+  <script>
+    // Redirect to login if not logged in
+    if (localStorage.getItem('portal_logged_in') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    // Product view tracking logic
+    function getProductsViewedCount() {
+      return parseInt(localStorage.getItem('products_viewed_count') || '0', 10);
+    }
+    function setProductsViewedCount(count) {
+      localStorage.setItem('products_viewed_count', count);
+    }
+    function sendProductsViewedEvent(count) {
+      if (typeof Genesys === "function") {
+        Genesys("command", "Journey.record", {
+          eventName: "ProductViewed",
+          customAttributes: {
+            ProductsViewedCount: count
+          },
+          traitsMapper: []
+        });
+      }
+    }
+    // Call this function whenever a product is viewed (e.g., when opening the product modal)
+    function onProductViewed() {
+      let count = getProductsViewedCount() + 1;
+      setProductsViewedCount(count);
+      sendProductsViewedEvent(count);
+    }
+
+    // Example integration: If you open a modal to show product details, call onProductViewed()
+    // Assuming you have a function like openProductModal(product)
+    // Patch it here if needed:
+    window.openProductModal = function(product) {
+      // ...existing code to populate modal...
+      document.getElementById('modal-image').src = product.image;
+      document.getElementById('modal-name').textContent = product.name;
+      document.getElementById('modal-category').textContent = product.category;
+      document.getElementById('modal-price').textContent = "₹" + product.price;
+      document.getElementById('product-modal').style.display = 'block';
+      onProductViewed(); // Track the view
+    };
+
+    // If your code attaches event listeners to product cards, make sure they call openProductModal(product)
+    // Example:
+    // document.querySelectorAll('.product-card').forEach(card => {
+    //   card.addEventListener('click', function() {
+    //     openProductModal(product);
+    //   });
+    // });
+  </script>
 </body>
 </html>

@@ -105,6 +105,13 @@ addCartBtn.onclick = function(e) {
     cart.push({ ...currentProduct, quantity: 1 });
     setCart(cart);
     openModal(currentProduct);
+    console.log("inside add cart button on click");
+    localStorage.removeItem('cartStartTime');
+    if (!localStorage.getItem('cartStartTime')) {
+      console.log("inside set time");
+      localStorage.setItem('cartStartTime', Date.now());
+      startCartTimeoutWatcher();
+    }
   }
 };
 
@@ -141,6 +148,58 @@ window.onclick = function(event) {
     closeModal();
   }
 };
+
+function startCartTimeoutWatcher() {
+  const interval = setInterval(() => {
+    const startTime = parseInt(localStorage.getItem('cartStartTime'), 10);
+    const cart = getCart();
+
+    if (!startTime || cart.length === 0) {
+      clearInterval(interval);
+      return;
+    }
+
+    const now = Date.now();
+    const elapsed = now - startTime;
+    console.log("Inside watcher");
+    if (elapsed >= 2 * 60 * 1000) { 
+      console.log("will call genesys function");
+      sendGenesysEvent();
+      localStorage.removeItem('cartStartTime');
+      clearInterval(interval);
+    }
+  }, 5000); // Check every 5 seconds
+}
+
+function sendGenesysEvent() {
+  console.log("Sending event to Genesys: Cart idle for 2 minutes");
+
+  // Example: If you use Genesys Web Messaging
+  console.log("inside send genesys event");
+  Genesys("command", "Journey.record", {
+      eventName: "CartTimeout",
+      customAttributes: {
+        timestamp: new Date().toISOString()
+      },
+      traitsMapper: []
+  });
+  console.log("event sent");
+  // if (window._genesys && window._genesys.command) {
+  //   window._genesys.command('Journey.record', {
+  //     eventName: 'CartLongTime',
+  //     customAttributes: {
+  //       timestamp: new Date().toISOString()
+  //       //cartValue: localStorage.getItem('cartTotal') || '0',
+  //     }
+  //   });
+  //   console.log("event sent");
+  // }
+
+  // If you're using an API, use fetch:
+  // fetch('/your-api/cart-abandonment', { method: 'POST', body: JSON.stringify(...) })
+}
+
+
 
 // Initial render
 renderProducts('All', '', '');

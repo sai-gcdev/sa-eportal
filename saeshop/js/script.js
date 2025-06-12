@@ -102,9 +102,16 @@ addCartBtn.onclick = function(e) {
   if (!currentProduct) return;
   let cart = getCart();
   if (!cart.some(p => p.name === currentProduct.name)) {
-    cart.push({ ...currentProduct, quantity: 1 });
+    cart.push({ ...currentProduct, quantity: 1});
     setCart(cart);
     openModal(currentProduct);
+    console.log("inside add cart button on click");
+    localStorage.removeItem('cartStartTimeFor' + currentProduct.name);
+    //if (!localStorage.getItem('cartStartTime')) {
+      console.log("inside set time");
+      localStorage.setItem('cartStartTimeFor' + currentProduct.name, Date.now());
+      startCartTimeoutWatcher(currentProduct);
+    //}
   }
 };
 
@@ -141,6 +148,58 @@ window.onclick = function(event) {
     closeModal();
   }
 };
+
+function startCartTimeoutWatcher(currentProduct) {
+  const interval = setInterval(() => {
+    const startTime = parseInt(localStorage.getItem('cartStartTimeFor' + currentProduct.name), 10);
+    const cart = getCart();
+    
+    if (!startTime || cart.length === 0) {
+      clearInterval(interval);
+      return;
+    }
+
+    const now = Date.now();
+    const elapsed = now - startTime;
+    console.log("Inside watcher");
+    if (elapsed >= 1 * 30 * 1000) { 
+      console.log("will call genesys function for " + currentProduct.name);
+      sendGenesysEvent(currentProduct.name);
+      localStorage.removeItem('cartStartTime');
+      clearInterval(interval);
+    }
+  }, 5000); // Check every 5 seconds
+}
+
+function sendGenesysEvent(prodcutName) {
+  console.log("Sending event to Genesys: Cart idle for 2 minutes");
+
+  // Example: If you use Genesys Web Messaging
+  console.log("inside send genesys event" + prodcutName);
+  Genesys("command", "Journey.record", {
+      eventName: "CartTimeout",
+      customAttributes: {
+        product: prodcutName
+      },
+      traitsMapper: []
+  });
+  console.log("event sent");
+  // if (window._genesys && window._genesys.command) {
+  //   window._genesys.command('Journey.record', {
+  //     eventName: 'CartLongTime',
+  //     customAttributes: {
+  //       timestamp: new Date().toISOString()
+  //       //cartValue: localStorage.getItem('cartTotal') || '0',
+  //     }
+  //   });
+  //   console.log("event sent");
+  // }
+
+  // If you're using an API, use fetch:
+  // fetch('/your-api/cart-abandonment', { method: 'POST', body: JSON.stringify(...) })
+}
+
+
 
 // Initial render
 renderProducts('All', '', '');

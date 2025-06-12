@@ -102,16 +102,16 @@ addCartBtn.onclick = function(e) {
   if (!currentProduct) return;
   let cart = getCart();
   if (!cart.some(p => p.name === currentProduct.name)) {
-    cart.push({ ...currentProduct, quantity: 1 });
+    cart.push({ ...currentProduct, quantity: 1});
     setCart(cart);
     openModal(currentProduct);
     console.log("inside add cart button on click");
-    localStorage.removeItem('cartStartTime');
-    if (!localStorage.getItem('cartStartTime')) {
+    localStorage.removeItem('cartStartTimeFor' + currentProduct.name);
+    //if (!localStorage.getItem('cartStartTime')) {
       console.log("inside set time");
-      localStorage.setItem('cartStartTime', Date.now());
-      startCartTimeoutWatcher();
-    }
+      localStorage.setItem('cartStartTimeFor' + currentProduct.name, Date.now());
+      startCartTimeoutWatcher(currentProduct);
+    //}
   }
 };
 
@@ -149,11 +149,11 @@ window.onclick = function(event) {
   }
 };
 
-function startCartTimeoutWatcher() {
+function startCartTimeoutWatcher(currentProduct) {
   const interval = setInterval(() => {
-    const startTime = parseInt(localStorage.getItem('cartStartTime'), 10);
+    const startTime = parseInt(localStorage.getItem('cartStartTimeFor' + currentProduct.name), 10);
     const cart = getCart();
-
+    
     if (!startTime || cart.length === 0) {
       clearInterval(interval);
       return;
@@ -162,24 +162,24 @@ function startCartTimeoutWatcher() {
     const now = Date.now();
     const elapsed = now - startTime;
     console.log("Inside watcher");
-    if (elapsed >= 2 * 60 * 1000) { 
-      console.log("will call genesys function");
-      sendGenesysEvent();
+    if (elapsed >= 1 * 30 * 1000) { 
+      console.log("will call genesys function for " + currentProduct.name);
+      sendGenesysEvent(currentProduct.name);
       localStorage.removeItem('cartStartTime');
       clearInterval(interval);
     }
   }, 5000); // Check every 5 seconds
 }
 
-function sendGenesysEvent() {
+function sendGenesysEvent(prodcutName) {
   console.log("Sending event to Genesys: Cart idle for 2 minutes");
 
   // Example: If you use Genesys Web Messaging
-  console.log("inside send genesys event");
+  console.log("inside send genesys event" + prodcutName);
   Genesys("command", "Journey.record", {
       eventName: "CartTimeout",
       customAttributes: {
-        timestamp: new Date().toISOString()
+        product: prodcutName
       },
       traitsMapper: []
   });

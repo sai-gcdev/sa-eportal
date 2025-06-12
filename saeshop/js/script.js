@@ -162,7 +162,7 @@ function startCartTimeoutWatcher(currentProduct) {
     const now = Date.now();
     const elapsed = now - startTime;
     console.log("Inside watcher");
-    if (elapsed >= 1 * 30 * 1000) { 
+    if (elapsed >= 10 * 1000) { 
       console.log("will call genesys function for " + currentProduct.name);
       sendGenesysEvent(currentProduct.name);
       localStorage.removeItem('cartStartTime');

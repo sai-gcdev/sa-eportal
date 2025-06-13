@@ -20,6 +20,12 @@
       deploymentId: 'd32d6461-b1ad-4858-b666-d19e7c6189cb'
     });
   </script>
+  <script>
+  Genesys("subscribe", "Journey.ready", function () {
+    console.log("Journey plugin is ready.");
+    // You can now safely send Journey events!
+  });
+</script>
 </head>
 <body>
   <header class="main-header">

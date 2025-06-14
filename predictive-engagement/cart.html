@@ -71,7 +71,7 @@
         Genesys("command", "Journey.record", {
           eventName: "CartIdle",
           customAttributes: {
-            IdleSeconds: 30,
+            IdleSeconds: 300,
             CartValue: cartValue
           },
           traitsMapper: []
@@ -84,7 +84,7 @@
       if (idleTimer) clearTimeout(idleTimer);
       idleTimer = setTimeout(function() {
         sendCartIdleEvent(getCartValue());
-      }, 30000); // 30 seconds
+      }, 300000); // 300 seconds = 5 minutes
     }
 
     ['mousemove', 'keydown', 'mousedown', 'touchstart'].forEach(evt =>
@@ -93,22 +93,26 @@
     resetIdleTimer();
   </script>
   <audio id="msgSound" src="sounds/bell.mp3" preload="auto"></audio>
-<script>
-window.addEventListener("DOMContentLoaded", () => {
-  Genesys("subscribe", "MessagingService.messagesReceived", function (event) {
-    const rawMessages = event?.data?.messages || [];
-    const msgs = Array.isArray(rawMessages) ? rawMessages : [rawMessages];
+  <script>
+    // Play bell sound only if customer is NOT viewing the cart page/tab
+    window.addEventListener("DOMContentLoaded", () => {
+      Genesys("subscribe", "MessagingService.messagesReceived", function (event) {
+        const rawMessages = event?.data?.messages || [];
+        const msgs = Array.isArray(rawMessages) ? rawMessages : [rawMessages];
 
-    msgs.forEach((message) => {
-      if (message.direction === "Outbound") {
-        const sound = document.getElementById("msgSound");
-        if (sound) {
-          sound.play().catch(() => {});
-        }
-      }
+        msgs.forEach((message) => {
+          if (
+            message.direction === "Outbound" &&
+            document.hidden // Only play if page is not visible
+          ) {
+            const sound = document.getElementById("msgSound");
+            if (sound) {
+              sound.play().catch(() => {});
+            }
+          }
+        });
+      });
     });
-  });
-});
-</script>
+  </script>
 </body>
 </html>

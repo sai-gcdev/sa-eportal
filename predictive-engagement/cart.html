@@ -92,5 +92,23 @@
     );
     resetIdleTimer();
   </script>
+  <audio id="msgSound" src="sounds/bell.mp3" preload="auto"></audio>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  Genesys("subscribe", "MessagingService.messagesReceived", function (event) {
+    const rawMessages = event?.data?.messages || [];
+    const msgs = Array.isArray(rawMessages) ? rawMessages : [rawMessages];
+
+    msgs.forEach((message) => {
+      if (message.direction === "Outbound") {
+        const sound = document.getElementById("msgSound");
+        if (sound) {
+          sound.play().catch(() => {});
+        }
+      }
+    });
+  });
+});
+</script>
 </body>
 </html>

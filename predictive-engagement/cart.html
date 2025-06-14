@@ -71,7 +71,7 @@
         Genesys("command", "Journey.record", {
           eventName: "CartIdle",
           customAttributes: {
-            IdleSeconds: 300,
+            IdleSeconds: 30,
             CartValue: cartValue
           },
           traitsMapper: []
@@ -84,7 +84,7 @@
       if (idleTimer) clearTimeout(idleTimer);
       idleTimer = setTimeout(function() {
         sendCartIdleEvent(getCartValue());
-      }, 300000); // 300 seconds = 5 minutes
+      }, 30000); // 30 seconds
     }
 
     ['mousemove', 'keydown', 'mousedown', 'touchstart'].forEach(evt =>

@@ -25,7 +25,7 @@
     console.log("Journey plugin is ready.");
     // You can now safely send Journey events!
   });
-</script>
+  </script>
 </head>
 <body>
   <header class="main-header">
@@ -119,6 +119,36 @@
       document.getElementById('product-modal').style.display = 'block';
       onProductViewed(); // Track the view
     };
+
+    // Idle tracking logic
+    let idleTimeout;
+    const idleTimeLimit = 60 * 1000; // 1 minute
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimeout);
+      idleTimeout = setTimeout(onUserIdle, idleTimeLimit);
+    }
+
+    function onUserIdle() {
+      if (typeof Genesys === "function") {
+        Genesys("command", "Journey.record", {
+          eventName: "UserIdle",
+          customAttributes: {
+            IdleSeconds: idleTimeLimit / 1000
+          },
+          traitsMapper: []
+        });
+        console.log("User idle event sent to Genesys.");
+      }
+    }
+
+    // Listen for user activity
+    ['mousemove', 'keydown', 'mousedown', 'touchstart'].forEach(evt =>
+      document.addEventListener(evt, resetIdleTimer)
+    );
+
+    // Start the idle timer when the page loads
+    resetIdleTimer();
 
     // If your code attaches event listeners to product cards, make sure they call openProductModal(product)
     // Example:

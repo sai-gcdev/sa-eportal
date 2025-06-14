@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cart Page</title>
   <link rel="stylesheet" href="css/styles.css" />
-    <!-- Genesys Cloud Web Messaging Deployment Code -->
+  <!-- Genesys Cloud Web Messaging Deployment Code -->
   <script type="text/javascript" charset="utf-8">
     (function (g, e, n, es, ys) {
       g['_genesysJs'] = e;
@@ -50,11 +50,47 @@
     });
   </script>
   <!-- Add before </body> in index.html and all protected pages -->
-<script>
-  // Redirect to login if not logged in
-  if (localStorage.getItem('portal_logged_in') !== 'true') {
-    window.location.href = 'login.html';
-  }
-</script>
+  <script>
+    // Redirect to login if not logged in
+    if (localStorage.getItem('portal_logged_in') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    // --- Idle detection and Genesys event for cart page ---
+    function getCartValue() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        return cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+      } catch {
+        return 0;
+      }
+    }
+
+    function sendCartIdleEvent(cartValue) {
+      if (typeof Genesys === "function") {
+        Genesys("command", "Journey.record", {
+          eventName: "CartIdle",
+          customAttributes: {
+            IdleSeconds: 30,
+            CartValue: cartValue
+          },
+          traitsMapper: []
+        });
+      }
+    }
+
+    let idleTimer = null;
+    function resetIdleTimer() {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(function() {
+        sendCartIdleEvent(getCartValue());
+      }, 30000); // 30 seconds
+    }
+
+    ['mousemove', 'keydown', 'mousedown', 'touchstart'].forEach(evt =>
+      document.addEventListener(evt, resetIdleTimer, true)
+    );
+    resetIdleTimer();
+  </script>
 </body>
 </html>

@@ -21,10 +21,10 @@
     });
   </script>
   <script>
-  Genesys("subscribe", "Journey.ready", function () {
-    console.log("Journey plugin is ready.");
-    // You can now safely send Journey events!
-  });
+    Genesys("subscribe", "Journey.ready", function () {
+      console.log("Journey plugin is ready.");
+      // You can now safely send Journey events!
+    });
   </script>
 </head>
 <body>
@@ -79,7 +79,10 @@
   <script>
     // Redirect to login if not logged in
     if (localStorage.getItem('portal_logged_in') !== 'true') {
+      console.log("[Auth] Not logged in, redirecting to login.html");
       window.location.href = 'login.html';
+    } else {
+      console.log("[Auth] User is logged in");
     }
 
     // Product view tracking logic
@@ -88,8 +91,10 @@
     }
     function setProductsViewedCount(count) {
       localStorage.setItem('products_viewed_count', count);
+      console.log("[ProductView] Set products_viewed_count:", count);
     }
     function sendProductsViewedEvent(count) {
+      console.log("[ProductView] Preparing to send ProductViewed event. Count:", count);
       if (typeof Genesys === "function") {
         Genesys("command", "Journey.record", {
           eventName: "ProductViewed",
@@ -98,6 +103,9 @@
           },
           traitsMapper: []
         });
+        console.log("[ProductView] ProductViewed event sent to Genesys:", count);
+      } else {
+        console.warn("[ProductView] Genesys function not available!");
       }
     }
     // Call this function whenever a product is viewed (e.g., when opening the product modal)
@@ -111,6 +119,7 @@
     function sendCartUpdateEvent() {
       try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        console.log("[CartUpdate] Cart contents:", cart);
         if (typeof Genesys === "function") {
           Genesys("command", "Journey.record", {
             eventName: "CartUpdated",
@@ -119,18 +128,17 @@
             },
             traitsMapper: []
           });
-          console.log("CartUpdated event sent to Genesys:", cart);
+          console.log("[CartUpdate] CartUpdated event sent to Genesys:", cart);
+        } else {
+          console.warn("[CartUpdate] Genesys function not available!");
         }
       } catch (e) {
-        console.warn("Failed to send CartUpdated event:", e);
+        console.warn("[CartUpdate] Failed to send CartUpdated event:", e);
       }
     }
 
     // Example integration: If you open a modal to show product details, call onProductViewed()
-    // Assuming you have a function like openProductModal(product)
-    // Patch it here if needed:
     window.openProductModal = function(product) {
-      // ...existing code to populate modal...
       document.getElementById('modal-image').src = product.image;
       document.getElementById('modal-name').textContent = product.name;
       document.getElementById('modal-category').textContent = product.category;
@@ -160,7 +168,9 @@
           },
           traitsMapper: []
         });
-        console.log("User idle event on products page sent to Genesys.");
+        console.log("[Idle] User idle event on products page sent to Genesys.");
+      } else {
+        console.warn("[Idle] Genesys function not available!");
       }
     }
 

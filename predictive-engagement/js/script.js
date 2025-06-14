@@ -107,13 +107,26 @@ addCartBtn.onclick = function(e) {
     openModal(currentProduct);
     console.log("inside add cart button on click");
     localStorage.removeItem('cartStartTimeFor' + currentProduct.name);
-    //if (!localStorage.getItem('cartStartTime')) {
-      console.log("inside set time");
-      localStorage.setItem('cartStartTimeFor' + currentProduct.name, Date.now());
-      startCartTimeoutWatcher(currentProduct);
-    //}
+    // Set time for cart timeout watcher
+    console.log("inside set time");
+    localStorage.setItem('cartStartTimeFor' + currentProduct.name, Date.now());
+    startCartTimeoutWatcher(currentProduct);
+
+    // Send Genesys event for cart update (add)
+    sendCartUpdateEvent();
   }
 };
+
+function removeFromCart(productName) {
+  let cart = getCart();
+  const idx = cart.findIndex(p => p.name === productName);
+  if (idx !== -1) {
+    cart.splice(idx, 1);
+    setCart(cart);
+    // Send Genesys event for cart update (remove)
+    sendCartUpdateEvent();
+  }
+}
 
 categoryFilter.addEventListener('change', () => {
   renderProducts(
@@ -165,41 +178,50 @@ function startCartTimeoutWatcher(currentProduct) {
     if (elapsed >= 1 * 30 * 1000) { 
       console.log("will call genesys function for " + currentProduct.name);
       sendGenesysEvent(currentProduct.name);
-      localStorage.removeItem('cartStartTime');
+      localStorage.removeItem('cartStartTimeFor' + currentProduct.name);
       clearInterval(interval);
     }
   }, 5000); // Check every 5 seconds
 }
 
-function sendGenesysEvent(prodcutName) {
-  console.log("Sending event to Genesys: Cart idle for 2 minutes");
-
-  // Example: If you use Genesys Web Messaging
-  console.log("inside send genesys event" + prodcutName);
-  Genesys("command", "Journey.record", {
+function sendGenesysEvent(productName) {
+  console.log("Sending event to Genesys: Cart idle for 30 seconds");
+  console.log("inside send genesys event " + productName);
+  if (typeof Genesys === "function") {
+    Genesys("command", "Journey.record", {
       eventName: "CartTimeout",
       customAttributes: {
-        product: prodcutName
+        product: productName
       },
       traitsMapper: []
-  });
-  console.log("event sent");
-  // if (window._genesys && window._genesys.command) {
-  //   window._genesys.command('Journey.record', {
-  //     eventName: 'CartLongTime',
-  //     customAttributes: {
-  //       timestamp: new Date().toISOString()
-  //       //cartValue: localStorage.getItem('cartTotal') || '0',
-  //     }
-  //   });
-  //   console.log("event sent");
-  // }
-
-  // If you're using an API, use fetch:
-  // fetch('/your-api/cart-abandonment', { method: 'POST', body: JSON.stringify(...) })
+    });
+    console.log("event sent");
+  } else {
+    console.warn("Genesys function not available!");
+  }
 }
 
-
+// Send cart update event to Genesys with all product details
+function sendCartUpdateEvent() {
+  try {
+    const cart = getCart();
+    console.log("[CartUpdate] Cart contents:", cart);
+    if (typeof Genesys === "function") {
+      Genesys("command", "Journey.record", {
+        eventName: "CartUpdated",
+        customAttributes: {
+          CartProducts: JSON.stringify(cart) // Send as string, not array!
+        },
+        traitsMapper: []
+      });
+      console.log("[CartUpdate] CartUpdated event sent to Genesys:", cart);
+    } else {
+      console.warn("[CartUpdate] Genesys function not available!");
+    }
+  } catch (e) {
+    console.warn("[CartUpdate] Failed to send CartUpdated event:", e);
+  }
+}
 
 // Initial render
 renderProducts('All', '', '');

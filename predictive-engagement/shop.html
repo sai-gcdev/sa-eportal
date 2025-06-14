@@ -107,6 +107,25 @@
       sendProductsViewedEvent(count);
     }
 
+    // Send cart update event to Genesys with all product details
+    function sendCartUpdateEvent() {
+      try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (typeof Genesys === "function") {
+          Genesys("command", "Journey.record", {
+            eventName: "CartUpdated",
+            customAttributes: {
+              CartProducts: JSON.stringify(cart) // Send as string, not array!
+            },
+            traitsMapper: []
+          });
+          console.log("CartUpdated event sent to Genesys:", cart);
+        }
+      } catch (e) {
+        console.warn("Failed to send CartUpdated event:", e);
+      }
+    }
+
     // Example integration: If you open a modal to show product details, call onProductViewed()
     // Assuming you have a function like openProductModal(product)
     // Patch it here if needed:
@@ -119,6 +138,9 @@
       document.getElementById('product-modal').style.display = 'block';
       onProductViewed(); // Track the view
     };
+
+    // Example: Call sendCartUpdateEvent() after adding/removing product to/from cart
+    // You must call sendCartUpdateEvent() in your addToCart and removeFromCart functions in js/products.js or js/script.js
 
     // Idle tracking logic
     let idleTimeout;
